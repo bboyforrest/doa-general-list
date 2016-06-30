@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="http://code.jquery.com/jquery-1.12.0.min.js"></script>
+</head>
+<body>
+    <script type="text/javascript">
+        /* Parent Object */
+
+    (function($){
+
+       var  app = {
+            data: {},
+            imageFolder: './generals-pic',
+            GeneralTypeAmazon: 'Amazon',
+            GeneralTypePrimus: 'Primus',
+            GeneralTypeZolmet: 'Zolmet',
+            GeneralTypeSolerian: 'Solerian',
+
+            increase_mirrors_attack: 'Увеличивает атаку Зеркал Огня',
+            increase_all_troops_attack: 'Усиливает атаку всех войск',
+            increase_all_troops_attack_range: 'Усиливает дальность атаки всех войск',
+            increase_venom_dragon_attack: 'Усиливает атаку Ядовитого Дракона',
+            increase_venom_dragon_attack_range: 'Усиливает дальность атаки Ядовитого Дракона',
+
+            init: function() {
+                this.dataList();
+                this.createGrid();
+            },
+
+            dataList: function() {
+                /* writing data */
+                this.data = {
+//                  "id": generals,
+                    "name": "General List",
+                    generalList: {
+                        nowa: {
+                            id: "nowa",
+                            name: "Nowa",
+                            image: "Nowa.jpg",
+                            rank: 'legendary',
+                            generalType: app.GeneralTypeAmazon,
+                            abilities: {
+                                "ab-1" : app.increase_mirrors_attack,
+                                "ab-2" : app.increase_all_troops_attack,
+                                "ab-3" : app.increase_all_troops_attack_range
+                            }
+                        },
+                        hippolita: {
+                            id: "hippolita",
+                            name: "Hippolita",
+                            image: "Hippolita.jpg",
+                            rank: 'legendary',
+                            generalType: app.GeneralTypeAmazon,
+                            abilities: {
+                                "ab-1" : app.increase_venom_dragon_attack,
+                                "ab-2" : app.increase_venom_dragon_attack_range,
+                                "ab-3" : app.increase_all_troops_attack,
+                                "ab-4" : app.increase_all_troops_attack_range
+                            }
+                        }
+                    }
+                };
+            },
+
+           applyFilter: function () {
+               var defaultData = app.data.generalList;
+               var data = defaultData;
+//               $.each(list, function( generalName, generalInfo ) {
+//
+//                   $.each(defaultData, function( generalName, generalInfo ) {
+//                       var a = $.map(generalInfo.abilities, function(n) {
+//                           return n.indexOf('aaa') > -1 ?  n : null;
+//                       });
+//                       // проверяем если а не пустой и push в массив data
+//                   });
+//
+//
+//               });
+
+               return data;
+           },
+
+           createGrid: function() {
+
+                app.generalList(app.applyFilter());
+
+            },
+
+           generalList: function(list) {
+                var html = '';
+
+               $.each(list, function( generalName, generalInfo ) {
+                   var listItem = $('<li class="listItem" />');
+
+                   html += "<li class='listItem' data-general=" + generalInfo.id + " >";
+
+                   html += "<div class='g-picture'>";
+//                   html += "<img src=" + app.imageFolder + "/" + generalInfo.rank + "/" +  generalInfo.image+ " >";
+                   html += "</div>";  // g-picture close div
+
+                   html += "<div class='g-description'>";
+
+                   html += "<h1 class='g-name-title'>";
+                   html += "<span class='g-name' >" + generalInfo.name + "</span>";
+                   html += "<span class='g-rank' >(" + generalInfo.rank + ")</span>";
+                   html += "</h1>";
+
+                   html += "<div class='g-type'>" + generalInfo.generalType + "</div>";
+
+                   html += "<div class='g-abilities'>";
+
+                   html += "</div>"; // g-abilities close div
+
+
+                   $.each(generalInfo.abilities, function( GeneralAbility, Ability ) {
+
+                       html += "<ul class='g-ability-list'>";
+                       html += "<li class='g-ability' >" + Ability + "</li>";
+                       html += "</ul>";
+                   });
+                   html += "</div>"; // g-description-close div
+                   html += "</li>";
+
+               });
+               $("#generalsList").html(html);
+           }
+        };
+
+        $(document).ready(function() {
+            app.init();
+        });
+
+    })(jQuery);
+
+    </script>
+
+    <div id="wrapper">
+        <ul class="generals-list" id="generalsList">
+
+        </ul>
+    </div>
+</body>
+</html>

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <!--<script src="http://code.jquery.com/jquery-1.12.0.min.js"></script>-->
+</head>
+<body>
+    <script type="text/javascript">
+    /* Parent Object */
+       var  app = {
+            data: {},
+            increace_mirrors_attak: 'Увеличивает атаку Зеркал Огня',
+            increace_all_troops_attack: 'Усиливает атаку всех войск',
+            increace_all_troops_attack_range: 'Усиливает дальность атаки всех войск',
+            increace_venom_dragon_attack: 'Усиливает атаку Ядовитого Дракона',
+            increace_venom_dragon_attack_range: 'Усиливает дальность атаки Ядовитого Дракона',
+
+            init: function() {
+                this.dataList();
+                this.showAll();
+            },
+
+            dataList: function() {
+                /* writing data */
+                this.data = {
+//                            "id": generals,
+                    "name": "General List",
+                    generalList: {
+                        nowa: {
+                            id: "nowa",
+                            name: "Nowa",
+                            image: "generals-pic\\5stars\\Nowa.jpg",
+                            rank: 5,
+                            abilities: [{
+                                "ab-1" : app.increace_mirrors_attak,
+                                "ab-2" : app.increace_all_troops_attack,
+                                "ab-3" : app.increace_all_troops_attack_range
+                            }]
+                        },
+                        hippolita: {
+                            id: "hippolita",
+                            name: "Hippolita",
+                            image: "generals-pic\\5stars\\Hippolita.jpg",
+                            rank: 5,
+                            abilities: [{
+                                "ab-1" : app.increace_venom_dragon_attack,
+                                "ab-2" : app.increace_venom_dragon_attack_range,
+                                "ab-3" : app.increace_all_troops_attack,
+                                "ab-4" : app.increace_all_troops_attack_range
+                            }]
+                        }
+                    }
+                };
+            },
+
+            showAll: function() {
+                var generalList =  app.data.generalList;
+//                var name = app.data.generalList['nowa'].name;
+//                console.log(name);
+                for (var key in generalList) {
+                    if (!generalList.hasOwnProperty(key)) continue;
+                    var obj = generalList[key];
+                    var generalsGrid = document.getElementById("generalsList");
+                    var generalListItem = document.createElement("LI");
+                    var generalListItemLink = document.createElement("A");
+                    var generalListItemLinkImage = document.createElement("Img");
+//                        generalListItemLink.classList.add('general');
+                        generalListItemLink.setAttribute('class', 'general');
+                        generalListItemLink.setAttribute('href', '/');
+                        generalListItemLinkImage.setAttribute('src', obj.image);
+
+                        generalListItem.appendChild(generalListItemLink);
+                        generalListItem.appendChild(generalListItemLinkImage);
+
+                        generalsGrid.appendChild(generalListItem);
+
+                        console.log(generalListItem);
+//                        generalListItem.createTextNode('<a href="javascript:void(0);"> + obj.name + </a>');
+
+                }
+
+//                for (var key in generalList) {
+//                    // skip loop if the property is from prototype
+//                    if (!generalList.hasOwnProperty(key)) continue;
+//
+//                    var obj = generalList[key];
+//                    for (var prop in obj) {
+//                        // skip loop if the property is from prototype
+//                        if(!obj.hasOwnProperty(prop)) continue;
+//
+//                        // your code
+//                        console.log(prop + " = " + obj[prop]);
+//                    }
+//                }
+            }
+        };
+
+        app.init();
+
+    </script>
+
+    <div id="wrapper">
+        <ul class="generals-list" id="generalsList">
+
+        </ul>
+    </div>
+</body>
+</html>
