@@ -12,22 +12,33 @@
     (function($){
 
        var  app = {
-            data: {},
-            imageFolder: './generals-pic',
-            GeneralTypeAmazon: 'Amazon',
-            GeneralTypePrimus: 'Primus',
-            GeneralTypeZolmet: 'Zolmet',
-            GeneralTypeSolerian: 'Solerian',
+                data: {},
+                imageFolder: './generals-pic',
+                GeneralTypeAmazon: 'Amazon',
+                GeneralTypePrimus: 'Primus',
+                GeneralTypeZolmet: 'Zolmet',
+                GeneralTypeSolerian: 'Solerian',
 
-            increase_mirrors_attack: 'Увеличивает атаку Зеркал Огня',
-            increase_all_troops_attack: 'Усиливает атаку всех войск',
-            increase_all_troops_attack_range: 'Усиливает дальность атаки всех войск',
-            increase_venom_dragon_attack: 'Усиливает атаку Ядовитого Дракона',
-            increase_venom_dragon_attack_range: 'Усиливает дальность атаки Ядовитого Дракона',
+                increase_mirrors_attack: 'Увеличивает атаку Зеркал Огня',
+                increase_all_troops_attack: 'Усиливает атаку всех войск',
+                increase_all_troops_attack_range: 'Усиливает дальность атаки всех войск',
+                increase_venom_dragon_attack: 'Усиливает атаку Ядовитого Дракона',
+                increase_venom_dragon_attack_range: 'Усиливает дальность атаки Ядовитого Дракона',
+
+                increase_lava_jaws_attack: 'Усиливает атаку лаваплюев',
+                increase_lava_jaws_attack_range: 'Усиливает дальность атаки лаваплюев',
+                increase_troopers_limit: 'Усиливает лимит войск',
+                reduce_mirrors_training_time: 'Ускоряет обучение Зеркал Огня',
+                reduce_all_troopers_training_time: 'Ускоряет обучение всех войск',
+                increase_venge_wyrm_speed: 'Увеличивает скорость Лютого Змея',
+                reduce_battle_dragons_training_time: 'Ускоряет обучение Боевых Драконов',
 
             init: function() {
-                this.dataList();
-                this.createGrid();
+                var _this = this;
+                _this.searchFilterOptions();
+                _this.dataList();
+                _this.createGrid();
+
             },
 
             dataList: function() {
@@ -42,11 +53,9 @@
                             image: "Nowa.jpg",
                             rank: 'legendary',
                             generalType: app.GeneralTypeAmazon,
-                            abilities: {
-                                "ab-1" : app.increase_mirrors_attack,
-                                "ab-2" : app.increase_all_troops_attack,
-                                "ab-3" : app.increase_all_troops_attack_range
-                            }
+                            ability1 : app.increase_mirrors_attack,
+                            ability2 : app.increase_all_troops_attack,
+                            ability3 : app.increase_all_troops_attack_range
                         },
                         hippolita: {
                             id: "hippolita",
@@ -54,33 +63,108 @@
                             image: "Hippolita.jpg",
                             rank: 'legendary',
                             generalType: app.GeneralTypeAmazon,
-                            abilities: {
-                                "ab-1" : app.increase_venom_dragon_attack,
-                                "ab-2" : app.increase_venom_dragon_attack_range,
-                                "ab-3" : app.increase_all_troops_attack,
-                                "ab-4" : app.increase_all_troops_attack_range
-                            }
+                            ability1 : app.increase_venom_dragon_attack,
+                            ability2 : app.increase_venom_dragon_attack_range,
+                            ability3 : app.increase_all_troops_attack,
+                            ability4 : app.increase_all_troops_attack_range
+                        },
+                        dreon: {
+                            id: "dreon",
+                            name: "Dreon",
+                            image: "Dreon.jpg",
+                            rank: 'elite',
+                            generalType: app.GeneralTypeAmazon,
+                            ability1 : app.increase_lava_jaws_attack,
+                            ability2 : app.increase_lava_jaws_attack_range,
+                            ability3 : app.increase_all_troops_attack
+                        },
+                        infax: {
+                            id: "infax",
+                            name: "Infax",
+                            image: "Infax.jpg",
+                            rank: 'elite',
+                            generalType: app.GeneralTypeSolerian,
+                            ability1 : app.increase_troopers_limit,
+                            ability2 : app.reduce_mirrors_training_time,
+                            ability3 : app.reduce_all_troopers_training_time
+                        },
+                        viteria: {
+                            id: "viteria",
+                            name: "Viteria",
+                            image: "Viteria.jpg",
+                            rank: 'uncommon',
+                            generalType: app.GeneralTypeAmazon,
+                            ability1 : app.increase_venom_dragon_attack,
+                            ability2 : app.increase_venge_wyrm_speed
+                        },
+                        silvonia: {
+                            id: "silvonia",
+                            name: "Silvonia",
+                            image: "Silvonia.jpg",
+                            rank: 'uncommon',
+                            generalType: app.GeneralTypeSolerian,
+                            ability1 : app.reduce_battle_dragons_training_time,
+                            ability2 : app.increase_troopers_limit
                         }
                     }
                 };
             },
 
+           searchFilterOptions: function() {
+               $("#search").on('input ', function() {
+                   app.createGrid();
+               });
+
+               $('.search-attributes input').change(function() {
+                   app.createGrid();
+               });
+           },
+
            applyFilter: function () {
                var defaultData = app.data.generalList;
-               var data = defaultData;
-//               $.each(list, function( generalName, generalInfo ) {
-//
-//                   $.each(defaultData, function( generalName, generalInfo ) {
-//                       var a = $.map(generalInfo.abilities, function(n) {
-//                           return n.indexOf('aaa') > -1 ?  n : null;
-//                       });
-//                       // проверяем если а не пустой и push в массив data
-//                   });
-//
-//
-//               });
+               var data = [];
 
+               function searchInput(data) {
+                   var searchData = $('#search').val().toLowerCase();
+                   $.each(defaultData, function( GeneralInfo, Info ) {
+
+                       var result = $.map(Info, function(ability) {
+                           return ability.toLowerCase().indexOf(searchData) > -1 ?  ability : null;
+                       });
+
+                       if (typeof result !== 'undefined' && result.length > 0) {
+                           data.push(Info);
+                       }
+                   });
+
+                   if(!data && !searchData) {
+                       data = defaultData;
+                   }
+
+               }
+
+               function selectDataType() {
+                   $('.search-attributes input').each(function() {
+                       if ($(this).is(":checked")) {
+                           console.log($(this).attr('id')+ ' checked');
+                       }
+                   });
+               }
+
+               selectDataType(data);
+               searchInput(data);
                return data;
+
+           },
+
+           searchByAbility: function() {
+               $('.g-ability, .g-type, .g-name, .g-rank').each(function(){
+                   $(this).on("click",function(){
+                       var searchText = $(this).text();
+                       $('#search').val(searchText);
+                       app.createGrid();
+                   });
+               })
            },
 
            createGrid: function() {
@@ -92,6 +176,9 @@
            generalList: function(list) {
                 var html = '';
 
+               if (list.length == 0) {
+                   html = 'Ничего похожего не найдено';
+               }
                $.each(list, function( generalName, generalInfo ) {
                    var listItem = $('<li class="listItem" />');
 
@@ -104,8 +191,8 @@
                    html += "<div class='g-description'>";
 
                    html += "<h1 class='g-name-title'>";
-                   html += "<span class='g-name' >" + generalInfo.name + "</span>";
-                   html += "<span class='g-rank' >(" + generalInfo.rank + ")</span>";
+                   html += "<span class='g-name' >" + generalInfo.name + "</span>(";
+                   html += "<span class='g-rank' >" + generalInfo.rank + "</span>)";
                    html += "</h1>";
 
                    html += "<div class='g-type'>" + generalInfo.generalType + "</div>";
@@ -114,18 +201,31 @@
 
                    html += "</div>"; // g-abilities close div
 
+                   html += "<ul class='g-ability-list'>";
 
-                   $.each(generalInfo.abilities, function( GeneralAbility, Ability ) {
+                       if(generalInfo.ability1) {
+                           html += "<li class='g-ability'>" + generalInfo.ability1 + "</li>";
+                       }
+                       if(generalInfo.ability2) {
+                           html += "<li class='g-ability'>" + generalInfo.ability2 + "</li>";
+                       }
+                       if(generalInfo.ability3) {
+                           html += "<li class='g-ability'>" + generalInfo.ability3 + "</li>";
+                       }
 
-                       html += "<ul class='g-ability-list'>";
-                       html += "<li class='g-ability' >" + Ability + "</li>";
-                       html += "</ul>";
-                   });
+                       if(generalInfo.ability4) {
+                           html += "<li class='g-ability'>" + generalInfo.ability4 + "</li>";
+                       }
+
+                   html += "</ul>";
+
                    html += "</div>"; // g-description-close div
                    html += "</li>";
 
                });
                $("#generalsList").html(html);
+
+              app.searchByAbility();
            }
         };
 
@@ -136,6 +236,35 @@
     })(jQuery);
 
     </script>
+
+    <div class="filter">
+        <div class="input-box">
+            <input type="text" value="" name="search" id="search" />
+        </div>
+
+        <div class="search-attributes">
+            <div class="input-box">
+                <label for="legendary">Легендарные
+                    <input type="checkbox" id="legendary" name="legendary">
+                </label>
+            </div>
+            <div class="input-box">
+                <label for="elite">Элитный
+                    <input type="checkbox" id="elite" name="elite">
+                </label>
+            </div>
+            <div class="input-box">
+                <label for="uncommon">Редкий
+                    <input type="checkbox" id="uncommon" name="uncommon">
+                </label>
+            </div>
+            <div class="input-box">
+                <label for="common">Обычный
+                    <input type="checkbox" id="common" name="common">
+                </label>
+            </div>
+        </div>
+    </div>
 
     <div id="wrapper">
         <ul class="generals-list" id="generalsList">
